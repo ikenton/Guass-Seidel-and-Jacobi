@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
 
 public class Project2{
     public static void main(String[] args){
@@ -123,7 +125,63 @@ public class Project2{
         */
     }
 
-    public static void loadCoef(int option, double array[][]){
+    public static void loadCoef(int option, double array[][], double b[]) throws FileNotFoundException{
+        Scanner kb = new Scanner(System.in);
+        Scanner read;
+        String filePath;
+        int number = array.length;
 
+        if(option == 1){
+            //file reader
+            System.out.println("Please enter the file path: ");
+            //set up file reader
+            kb.nextLine();
+            filePath = kb.nextLine();
+            System.out.println("File path: "+filePath);
+            File file = new File(filePath);
+            read = new Scanner(file);
+            
+            //go through file and pick out each int and put it in the array
+            ArrayList<Double> tempList = new ArrayList<Double>();
+            int count = 0;
+            while(read.hasNext()){
+                if(read.hasNextDouble()){
+                    tempList.add(read.nextDouble());
+                    //System.out.println("running :)");
+                    System.out.println(tempList.get(count));
+                    count++;
+                }
+                if(read.hasNext() && !read.hasNextDouble()){
+                    read.next();
+                }
+            }
+
+            //list -> array
+            for(int i = 0; i < number; i++){
+                for(int j = 0; j < 4; j++){
+                    array[i][j] = tempList.get(0);
+                    tempList.remove(0);
+                    if(j == 3){
+                        b[i]= array[i][3];
+                    }
+                }
+                System.out.println();
+                
+                
+            }
+        }
+        else{
+            for(int i = 0; i < number; i++){
+                System.out.println("\nPlease enter 4 coefficients for equation "+(i+1));
+                for(int j = 0; j < 4; j++){
+                    
+                    array[i][j] = kb.nextInt();
+                    if(j == 3){
+                        b[i]= array[i][3];
+                    }
+                }
+            }
+        }
+        kb.close();
     }
 }
