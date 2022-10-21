@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Project2{
-    public static void main(String[] args){
+    public static void main(String[] args)throws FileNotFoundException{
         Scanner kb = new Scanner(System.in);
         int number;
         int response = 0;
@@ -39,12 +39,18 @@ public class Project2{
         do{
             System.out.println("Press 1 to enter a file. Press 2 to enter the equation by hand");
             response = kb.nextInt();
-        }while(response != 1 || response != 2);
+            System.out.println("response: " + response);
+        }while(response != 2 && response != 1); //doesnt take the or condition
 
         //load the equations onto array A
-        
-        guassSeidel(equations, b, x); //error?
-        jacobi(equations, b, x);
+        loadCoef(response, equations, b);
+        for(int i = 0; i < number; i++){
+            for(int j = 0; j<4;j++){
+                System.out.println(equations[i][j]+" ");
+            }
+        }
+        //guassSeidel(equations, b, x); //error?
+        //jacobi(equations, b, x);
        
         kb.close();
     }
@@ -135,7 +141,8 @@ public class Project2{
             //file reader
             System.out.println("Please enter the file path: ");
             //set up file reader
-            kb.nextLine();
+            //kb.nextLine();
+
             filePath = kb.nextLine();
             System.out.println("File path: "+filePath);
             File file = new File(filePath);
