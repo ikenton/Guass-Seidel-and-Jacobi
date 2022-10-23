@@ -38,7 +38,6 @@ public class Project2{
         do{
             System.out.println("Press 1 to enter a file. Press 2 to enter the equation by hand");
             response = kb.nextInt();
-            System.out.println("response: " + response);
         }while(response != 2 && response != 1); //doesnt take the or condition
 
         //load the equations onto array A
@@ -56,33 +55,29 @@ public class Project2{
         System.out.println("Please enter your "+ number+ " starting guesses: ");//x1 = 0 x2 =0 x3 = 0
         for(int i = 0; i < number; i++){
             xJacobi[i] = kb.nextDouble();
+            xGuass[i] = xJacobi[i];
         }
         
-        //guassSeidel(equations, b, xGuass); 
+        
         jacobi(equations, b, xJacobi, e);  
-       
+        //System.out.println("Jacobi over guass starting");
+        guassSeidel(equations, b, xGuass, e); 
+        //System.out.println("Guass over");
         kb.close();
     }
 
     private static void jacobi(double[][] equations, double[] b, double[] x, double e){
-        Scanner kb = new Scanner(System.in);
         System.out.println("--JACOBI START--");
         //psuedocode
         //x is the solution, A is the matrix, b is the vector
         double kmax = 50; //iteration cap
         double delta = Math.pow(10, -10);
-        //double e = 0.0001; //desired error epsilon
         int i, j, k, n;
         double diag, sum;
         n = equations.length;
         double norm = 0; //sqrt(sum from 1 to k of (x-y)^2)
         double y[] = new double[n]; //contains the old iterative values
     
-        /*
-        for(int p = 0; p < n; p++){
-            x[p] = kb.nextDouble();
-        }
-        kb.close();*/
         
         for(k = 0; k < kmax; k++){
             norm = 0;
@@ -112,7 +107,7 @@ public class Project2{
             for(int p = 0; p < n; p++){
                 System.out.printf("%.4f ",x[p]);
             }
-            System.out.println(" ]T");
+            System.out.println("]T");
             //find L2 sqrt(norm)
             //Sum k=1 -> n |x-y|^2
             for(int p = 0; p < n; p++){
@@ -126,7 +121,7 @@ public class Project2{
                 for(int p = 0; p < n; p++){
                     System.out.printf("%.4f ",x[p]);
                 }
-                System.out.println(" ]T ");
+                System.out.println("]T ");
                 System.out.println("L2: "+Math.sqrt(norm));
                 return;
             }
@@ -136,34 +131,23 @@ public class Project2{
         
     }
 
-    /*public static void guassSeidel(double[][] equations, double[] b, double[] xGuass, double e){
-        Scanner kb = new Scanner(System.in);
-        System.out.println("--Guass-Seidel--");
+    public static void guassSeidel(double[][] equations, double[] b, double[] x, double e){
+        System.out.println("\n--GUASS-SEIDEL START--");
         //psuedocode
         //x is the solution, A is the matrix, b is the vector
         double kmax = 50; //iteration cap
         double delta = Math.pow(10, -10);
-        //double e = 0.0001; //desired error epsilon
         int i, j, k, n;
         double diag, sum;
         n = equations.length;
         double norm = 0; //sqrt(sum from 1 to k of (x-y)^2)
         double y[] = new double[n]; //contains the old iterative values
     
-        //ask for desired stopping error
-        /*System.out.println("What is your desired stopping error?"); 
-        e = kb.nextDouble();
         
-        System.out.println("Please enter your starting guess: ");//x1 = 0 x2 =0 x3 = 0
-        for(int p = 0; p < n; p++){
-            x[p] = kb.nextDouble();
-        }
-        kb.close();*/
-        
-        /*for(k = 0; k < kmax; k++){
+        for(k = 0; k < kmax; k++){
             norm = 0;
             for(int p = 0; p < n; p++){
-                y[p] = xGuass[p];
+                y[p] = x[p];
             }
 
             for(i = 0; i < n; i++){       
@@ -173,36 +157,35 @@ public class Project2{
                     System.out.println("The diagonal element is too small");
                     return;
                 }
-                for(j = 0; j < n; j++){
-                    if(j != i){
-                        sum = sum - (equations[i][j]*y[j]);
-                    }
+                for(j = 1; j < i-1; j++){
+                    sum = sum - (equations[i][j]*x[j]);
                 }
-                xGuass[i] = sum/diag;
+                for(j = i + 1; j < n; j++){
+                    sum = sum - (equations[i][j])*x[j];
+                }
+                x[i] = sum/diag;
             }
-          
-            
             
             //output k (number of iteration) and x which is the values of our iterations
             System.out.print("Iteration: "+(k+1)+" [ ");
             for(int p = 0; p < n; p++){
-                System.out.printf("%.4f ",xGuass[p]);
+                System.out.printf("%.4f ",x[p]);
             }
-            System.out.println(" ]T");
+            System.out.println("]T");
             //find L2 sqrt(norm)
             //Sum k=1 -> n |x-y|^2
             for(int p = 0; p < n; p++){
                 //absolute value doesnt matter because we are just squaring it 
-                norm += Math.pow(xGuass[p]-y[p],2);
+                norm += Math.pow(x[p]-y[p],2);
             }
             System.out.println("L2: "+Math.sqrt(norm));
             if(Math.sqrt(norm) < e){
                 System.out.println("Solution: ");
                 System.out.print("Iteration: "+(k+1)+"  [ ");
                 for(int p = 0; p < n; p++){
-                    System.out.printf("%.4f ",xGuass[p]);
+                    System.out.printf("%.4f ",x[p]);
                 }
-                System.out.println(" ]T ");
+                System.out.println("]T ");
                 System.out.println("L2: "+Math.sqrt(norm));
                 return;
             }
@@ -210,7 +193,7 @@ public class Project2{
          }
          System.out.println("Max iterations reached");
         
-    }*/
+    }
 
     public static void loadCoef(int option, double array[][], double b[]) throws FileNotFoundException{
         Scanner kb = new Scanner(System.in);
