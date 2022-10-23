@@ -32,7 +32,7 @@ public class Project2{
         b  = new double[number];
         
         equations = new double[number][number]; //Aij size nxn
-        //xJacobi = new double[number];
+        xJacobi = new double[number];
         xGuass = new double[number];
 
         do{
@@ -49,33 +49,36 @@ public class Project2{
             }
             System.out.println();
         }
+
+        System.out.println("Please enter your desired stopping error: ");
+        double e = kb.nextDouble(); //epsilon
         
+        System.out.println("Please enter your "+ number+ " starting guesses: ");//x1 = 0 x2 =0 x3 = 0
+        for(int i = 0; i < number; i++){
+            xJacobi[i] = kb.nextDouble();
+        }
         
         //guassSeidel(equations, b, xGuass); 
-        jacobi(equations, b, xJacobi);  
+        jacobi(equations, b, xJacobi, e);  
        
         kb.close();
     }
 
-    private static void jacobi(double[][] equations, double[] b, double[] x){
+    private static void jacobi(double[][] equations, double[] b, double[] x, double e){
         Scanner kb = new Scanner(System.in);
         System.out.println("--JACOBI START--");
         //psuedocode
         //x is the solution, A is the matrix, b is the vector
         double kmax = 50; //iteration cap
         double delta = Math.pow(10, -10);
-        double e = 0.0001; //desired error epsilon
+        //double e = 0.0001; //desired error epsilon
         int i, j, k, n;
         double diag, sum;
         n = equations.length;
         double norm = 0; //sqrt(sum from 1 to k of (x-y)^2)
         double y[] = new double[n]; //contains the old iterative values
     
-        //ask for desired stopping error
-        /*System.out.println("What is your desired stopping error?"); 
-        e = kb.nextDouble();
-        
-        System.out.println("Please enter your starting guess: ");//x1 = 0 x2 =0 x3 = 0
+        /*
         for(int p = 0; p < n; p++){
             x[p] = kb.nextDouble();
         }
@@ -133,6 +136,82 @@ public class Project2{
         
     }
 
+    /*public static void guassSeidel(double[][] equations, double[] b, double[] xGuass, double e){
+        Scanner kb = new Scanner(System.in);
+        System.out.println("--Guass-Seidel--");
+        //psuedocode
+        //x is the solution, A is the matrix, b is the vector
+        double kmax = 50; //iteration cap
+        double delta = Math.pow(10, -10);
+        //double e = 0.0001; //desired error epsilon
+        int i, j, k, n;
+        double diag, sum;
+        n = equations.length;
+        double norm = 0; //sqrt(sum from 1 to k of (x-y)^2)
+        double y[] = new double[n]; //contains the old iterative values
+    
+        //ask for desired stopping error
+        /*System.out.println("What is your desired stopping error?"); 
+        e = kb.nextDouble();
+        
+        System.out.println("Please enter your starting guess: ");//x1 = 0 x2 =0 x3 = 0
+        for(int p = 0; p < n; p++){
+            x[p] = kb.nextDouble();
+        }
+        kb.close();*/
+        
+        /*for(k = 0; k < kmax; k++){
+            norm = 0;
+            for(int p = 0; p < n; p++){
+                y[p] = xGuass[p];
+            }
+
+            for(i = 0; i < n; i++){       
+                sum = b[i];
+                diag = equations[i][i];
+                if( Math.abs(diag)< delta ){
+                    System.out.println("The diagonal element is too small");
+                    return;
+                }
+                for(j = 0; j < n; j++){
+                    if(j != i){
+                        sum = sum - (equations[i][j]*y[j]);
+                    }
+                }
+                xGuass[i] = sum/diag;
+            }
+          
+            
+            
+            //output k (number of iteration) and x which is the values of our iterations
+            System.out.print("Iteration: "+(k+1)+" [ ");
+            for(int p = 0; p < n; p++){
+                System.out.printf("%.4f ",xGuass[p]);
+            }
+            System.out.println(" ]T");
+            //find L2 sqrt(norm)
+            //Sum k=1 -> n |x-y|^2
+            for(int p = 0; p < n; p++){
+                //absolute value doesnt matter because we are just squaring it 
+                norm += Math.pow(xGuass[p]-y[p],2);
+            }
+            System.out.println("L2: "+Math.sqrt(norm));
+            if(Math.sqrt(norm) < e){
+                System.out.println("Solution: ");
+                System.out.print("Iteration: "+(k+1)+"  [ ");
+                for(int p = 0; p < n; p++){
+                    System.out.printf("%.4f ",xGuass[p]);
+                }
+                System.out.println(" ]T ");
+                System.out.println("L2: "+Math.sqrt(norm));
+                return;
+            }
+            
+         }
+         System.out.println("Max iterations reached");
+        
+    }*/
+
     public static void loadCoef(int option, double array[][], double b[]) throws FileNotFoundException{
         Scanner kb = new Scanner(System.in);
         Scanner read;
@@ -188,7 +267,7 @@ public class Project2{
                     if(j == number){
                         b[i]= array[i][number];
                     }else{
-                        array[i][j] = kb.nextInt();
+                        array[i][j] = kb.nextDouble();
                     }
                 }
             }
@@ -198,7 +277,7 @@ public class Project2{
             System.out.println("ERROR: The coefficients you have entered are not diagonally dominant");
             checkDiagonal(array);
         }
-        kb.close();
+        
     }
 
     public static boolean checkDiagonal(double[][] coefficients){
