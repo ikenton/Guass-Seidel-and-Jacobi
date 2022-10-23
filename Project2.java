@@ -7,9 +7,9 @@ public class Project2{
         Scanner kb = new Scanner(System.in);
         int number;
         int response = 0;
-        double b[], xJacobi[], xGuass[]; 
+        double b[], /*xJacobi[],*/ xGuass[]; 
         double equations[][];
-
+        double xJacobi[] = {0,0,0};
         //ask for user input
         System.out.println("Please enter the number of linear equations.");
         number = kb.nextInt();
@@ -32,7 +32,7 @@ public class Project2{
         b  = new double[number];
         
         equations = new double[number][number]; //Aij size nxn
-        xJacobi = new double[number];
+        //xJacobi = new double[number];
         xGuass = new double[number];
 
         do{
@@ -64,7 +64,7 @@ public class Project2{
         //x is the solution, A is the matrix, b is the vector
         double kmax = 50; //iteration cap
         double delta = Math.pow(10, -10);
-        double e; //desired error epsilon
+        double e = 0.0001; //desired error epsilon
         int i, j, k, n;
         double diag, sum;
         n = equations.length;
@@ -72,17 +72,21 @@ public class Project2{
         double y[] = new double[n]; //contains the old iterative values
     
         //ask for desired stopping error
-        System.out.println("What is your desired stopping error?"); 
+        /*System.out.println("What is your desired stopping error?"); 
         e = kb.nextDouble();
         
         System.out.println("Please enter your starting guess: ");//x1 = 0 x2 =0 x3 = 0
         for(int p = 0; p < n; p++){
             x[p] = kb.nextDouble();
         }
-        kb.close();
-
+        kb.close();*/
+        
         for(k = 0; k < kmax; k++){
-            y[k] = x[k];
+            norm = 0;
+            for(int p = 0; p < n; p++){
+                y[p] = x[p];
+            }
+
             for(i = 0; i < n; i++){       
                 sum = b[i];
                 diag = equations[i][i];
