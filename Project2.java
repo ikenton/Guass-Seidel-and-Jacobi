@@ -44,7 +44,7 @@ public class Project2{
         //load the equations onto array A
         loadCoef(response, equations, b);
         for(int i = 0; i < number; i++){
-            for(int j = 0; j < number-1;j++){
+            for(int j = 0; j < number;j++){
                 System.out.print(equations[i][j]+" ");
             }
             System.out.println();
@@ -53,48 +53,8 @@ public class Project2{
         
         //guassSeidel(equations, b, xGuass); 
         jacobi(equations, b, xJacobi);  
-        
-        
        
         kb.close();
-    }
-
-    public static void gaussSeidel(double[][] equations, double[] b, double[] x){
-        /*GaussSeidel(A,b,x) 
-         *  kmax = 100
-         *  sigma = 10^-10
-         *  e = 0.5 * 10^-4
-         * 
-         * int i, j, k, kmax, n;
-         * real diag, sum (arrays?)
-         * n = size(A)
-         * 
-         * for(k = 1 to kmax){
-         *  y = x
-         *  for(i = 1 to n){         1 might be 0? 
-            *  sum = b[i]
-            *  diag = a[i][i]
-                if |diag| < sigma {
-                    the diagonal element is too small
-                    return
-                }
-                for(j = 1 to i-1){
-                    sum = sum - (a[i][j] * x[j]);
-                }
-                for(j = i + 1 to n){
-                    sum = sum - (a[i][j]*x[j]);
-                }
-                x[j] = sum/diag;
-            }
-         * 
-            * output k, x
-            * if( |x - y| < e){
-            *  output k,x
-            *  return
-            * }
-         * }
-         * output max iterations 
-        */
     }
 
     private static void jacobi(double[][] equations, double[] b, double[] x){
@@ -143,16 +103,26 @@ public class Project2{
             //output k (number of iteration) and x which is the values of our iterations
             System.out.print("Iteration: "+(k+1)+" [ ");
             for(int p = 0; p < n; p++){
-                System.out.println(x[p]+" ");
+                System.out.printf("%.4f ",x[p]);
             }
-            System.out.println("]T");
+            System.out.println(" ]T");
             //find L2 sqrt(norm)
             //Sum k=1 -> n |x-y|^2
             for(int p = 0; p < n; p++){
                 //absolute value doesnt matter because we are just squaring it 
                 norm += Math.pow(x[p]-y[p],2);
             }
-
+            System.out.println("L2: "+Math.sqrt(norm));
+            if(Math.sqrt(norm) < e){
+                System.out.println("Solution: ");
+                System.out.print("Iteration: "+(k+1)+"  [ ");
+                for(int p = 0; p < n; p++){
+                    System.out.printf("%.4f ",x[p]);
+                }
+                System.out.println(" ]T ");
+                System.out.println("L2: "+Math.sqrt(norm));
+                return;
+            }
             
          }
          System.out.println("Max iterations reached");
@@ -183,7 +153,7 @@ public class Project2{
                 if(read.hasNextDouble()){
                     tempList.add(read.nextDouble());
                     //System.out.println("running :)");
-                    System.out.println(tempList.get(count));
+                    //System.out.println(tempList.get(count));
                     count++;
                 }
                 if(read.hasNext() && !read.hasNextDouble()){
@@ -193,26 +163,26 @@ public class Project2{
 
             //list -> array
             for(int i = 0; i < number; i++){
-                for(int j = 0; j < number; j++){
-                    array[i][j] = tempList.get(0);
-                    tempList.remove(0);
-                    if(j == number-1){
+                for(int j = 0; j < number+1; j++){
+                    
+                    if(j == number){
                         b[i]= array[i][j];
+                    }else{
+                        array[i][j] = tempList.get(0);
+                        tempList.remove(0);
                     }
                 }
-                System.out.println();
-                
-                
             }
         }
         else{
             for(int i = 0; i < number; i++){
                 System.out.println("\nPlease enter 4 coefficients for equation "+(i+1));
-                for(int j = 0; j < number; j++){
+                for(int j = 0; j < number+1; j++){
                     
-                    array[i][j] = kb.nextInt();
                     if(j == number-1){
                         b[i]= array[i][j];
+                    }else{
+                        array[i][j] = kb.nextInt();
                     }
                 }
             }
