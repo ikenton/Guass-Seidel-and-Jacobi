@@ -148,11 +148,11 @@ public class Project2{
                     System.out.println("The diagonal element is too small");
                     return;
                 }
-                for(j = 1; j < i-1; j++){
+                for(j = 0; j <= i-1; j++){
                     sum = sum - (equations[i][j]*x[j]);
                 }
                 for(j = i + 1; j < n; j++){
-                    sum = sum - (equations[i][j])*x[j];
+                    sum = sum - (equations[i][j]*x[j]);
                 }
                 x[i] = sum/diag;
             }
