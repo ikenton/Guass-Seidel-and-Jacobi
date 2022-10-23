@@ -20,15 +20,6 @@ public class Project2{
             System.out.println(number);
         }
 
-        
-        System.out.println("Please enter the amount of linear equations.");
-        
-        while(number > 10 || number <= 1){
-            System.out.println("The number you have entered is out of bounds. Please enter a number that is more than 1 and less then or equal to 10");
-            number = kb.nextInt();
-            System.out.println(number);
-        }
-
         b  = new double[number];
         
         equations = new double[number][number]; //Aij size nxn
@@ -231,7 +222,6 @@ public class Project2{
             for(int i = 0; i < number; i++){
                 for(int j = 0; j < number+1; j++){
                     if(j == number){
-                        
                         b[i]= tempList.get(0);
                         tempList.remove(0);
                         
@@ -246,11 +236,11 @@ public class Project2{
             for(int i = 0; i < number; i++){
                 System.out.println("\nPlease enter 4 coefficients for equation "+(i+1));
                 for(int j = 0; j < number+1; j++){
-                    
                     if(j == number){
-                        b[i]= array[i][number];
+                        b[i]= kb.nextDouble();
                     }else{
                         array[i][j] = kb.nextDouble();
+                        
                     }
                 }
             }
