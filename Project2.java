@@ -31,7 +31,7 @@ public class Project2{
 
         b  = new double[number];
         
-        equations = new double[number][number]; //Aij
+        equations = new double[number][number]; //Aij size nxn
         xJacobi = new double[number];
         xGuass = new double[number];
 
@@ -164,9 +164,11 @@ public class Project2{
             //list -> array
             for(int i = 0; i < number; i++){
                 for(int j = 0; j < number+1; j++){
-                    
                     if(j == number){
-                        b[i]= array[i][j];
+                        
+                        b[i]= tempList.get(0);
+                        tempList.remove(0);
+                        
                     }else{
                         array[i][j] = tempList.get(0);
                         tempList.remove(0);
@@ -179,22 +181,24 @@ public class Project2{
                 System.out.println("\nPlease enter 4 coefficients for equation "+(i+1));
                 for(int j = 0; j < number+1; j++){
                     
-                    if(j == number-1){
-                        b[i]= array[i][j];
+                    if(j == number){
+                        b[i]= array[i][number];
                     }else{
                         array[i][j] = kb.nextInt();
                     }
                 }
             }
-            if(!checkDiagonal(array)){
-                System.out.println("ERROR: The coefficients you have entered are not diagonally dominant");
-                checkDiagonal(array);
-            }
+            
+        }
+        if(!checkDiagonal(array)){
+            System.out.println("ERROR: The coefficients you have entered are not diagonally dominant");
+            checkDiagonal(array);
         }
         kb.close();
     }
 
     public static boolean checkDiagonal(double[][] coefficients){
+        System.out.println("Checking...");
         double sum = 0;
         int length = coefficients.length;
         double diagVal = coefficients[0][0];
