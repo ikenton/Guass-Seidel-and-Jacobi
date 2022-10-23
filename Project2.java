@@ -7,7 +7,7 @@ public class Project2{
         Scanner kb = new Scanner(System.in);
         int number;
         int response = 0;
-        double b[], x[]; 
+        double b[], xJacobi[], xGuass[]; 
         double equations[][];
 
         //ask for user input
@@ -31,9 +31,9 @@ public class Project2{
 
         b  = new double[number];
         
-        equations = new double[number][4]; //Aij
-        x = new double[number];
-
+        equations = new double[number][number]; //Aij
+        xJacobi = new double[number];
+        xGuass = new double[number];
 
         do{
             System.out.println("Press 1 to enter a file. Press 2 to enter the equation by hand");
@@ -44,15 +44,15 @@ public class Project2{
         //load the equations onto array A
         loadCoef(response, equations, b);
         for(int i = 0; i < number; i++){
-            for(int j = 0; j<4;j++){
+            for(int j = 0; j < number-1;j++){
                 System.out.print(equations[i][j]+" ");
             }
             System.out.println();
         }
         
         
-        //guassSeidel(equations, b, x); 
-        jacobi(equations, b, x);  
+        //guassSeidel(equations, b, xGuass); 
+        jacobi(equations, b, xJacobi);  
         
         
        
@@ -108,9 +108,9 @@ public class Project2{
         int i, j, k, n;
         double diag, sum;
         n = equations.length;
+        double norm = 0; //sqrt(sum from 1 to k of (x-y)^2)
         double y[] = new double[n]; //contains the old iterative values
-
-
+    
         //ask for desired stopping error
         System.out.println("What is your desired stopping error?"); 
         e = kb.nextDouble();
@@ -138,15 +138,22 @@ public class Project2{
                 x[i] = sum/diag;
             }
           
-             //output k, x
-             if( Math.abs(x[k]-y[k]) < e){
-              //output k,x
-              return;
+            
+            
+            //output k (number of iteration) and x which is the values of our iterations
+            System.out.print("Iteration: "+(k+1)+" [ ");
+            for(int p = 0; p < n; p++){
+                System.out.println(x[p]+" ");
             }
-            System.out.println("x values: ");
-            for(int p = 0; p < 4; p++){
-                System.out.println(x[p]);
+            System.out.println("]T");
+            //find L2 sqrt(norm)
+            //Sum k=1 -> n |x-y|^2
+            for(int p = 0; p < n; p++){
+                //absolute value doesnt matter because we are just squaring it 
+                norm += Math.pow(x[p]-y[p],2);
             }
+
+            
          }
          System.out.println("Max iterations reached");
         
@@ -186,11 +193,11 @@ public class Project2{
 
             //list -> array
             for(int i = 0; i < number; i++){
-                for(int j = 0; j < 4; j++){
+                for(int j = 0; j < number; j++){
                     array[i][j] = tempList.get(0);
                     tempList.remove(0);
-                    if(j == 3){
-                        b[i]= array[i][3];
+                    if(j == number-1){
+                        b[i]= array[i][j];
                     }
                 }
                 System.out.println();
@@ -201,11 +208,11 @@ public class Project2{
         else{
             for(int i = 0; i < number; i++){
                 System.out.println("\nPlease enter 4 coefficients for equation "+(i+1));
-                for(int j = 0; j < 4; j++){
+                for(int j = 0; j < number; j++){
                     
                     array[i][j] = kb.nextInt();
-                    if(j == 3){
-                        b[i]= array[i][3];
+                    if(j == number-1){
+                        b[i]= array[i][j];
                     }
                 }
             }
@@ -225,7 +232,7 @@ public class Project2{
         for(int i = 0; i < length; i++){
             sum = 0;
             diagVal = coefficients[i][i];
-            for(int j = 0; j < 3; j++){
+            for(int j = 0; j < length; j++){
                 //any value that is not a diagonal value is going into the sum
                 if(i != j){ 
                     sum += coefficients[i][j];
