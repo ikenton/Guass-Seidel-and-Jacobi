@@ -50,8 +50,11 @@ public class Project2{
             System.out.println();
         }
         
+        
         //guassSeidel(equations, b, x); 
-        jacobi(equations, b, x);
+        jacobi(equations, b, x);  
+        
+        
        
         kb.close();
     }
@@ -100,9 +103,8 @@ public class Project2{
         //psuedocode
         //x is the solution, A is the matrix, b is the vector
         double kmax = 50; //iteration cap
-        double delta;
-        double e; //desired error
-        double temp;
+        double delta = Math.pow(10, -10);
+        double e; //desired error epsilon
         int i, j, k, n;
         double diag, sum;
         n = equations.length;
@@ -117,7 +119,7 @@ public class Project2{
         for(int p = 0; p < n; p++){
             x[p] = kb.nextDouble();
         }
-
+        kb.close();
 
         for(k = 0; k < kmax; k++){
             y[k] = x[k];
@@ -133,7 +135,7 @@ public class Project2{
                         sum = sum - (equations[i][j]*y[j]);
                     }
                 }
-                x[j] = sum/diag;
+                x[i] = sum/diag;
             }
           
              //output k, x
@@ -147,7 +149,7 @@ public class Project2{
             }
          }
          System.out.println("Max iterations reached");
-        kb.close();
+        
     }
 
     public static void loadCoef(int option, double array[][], double b[]) throws FileNotFoundException{
@@ -207,11 +209,33 @@ public class Project2{
                     }
                 }
             }
+            if(!checkDiagonal(array)){
+                System.out.println("ERROR: The coefficients you have entered are not diagonally dominant");
+                checkDiagonal(array);
+            }
         }
         kb.close();
     }
 
-    public void checkDiagonal(){
+    public static boolean checkDiagonal(double[][] coefficients){
+        double sum = 0;
+        int length = coefficients.length;
+        double diagVal = coefficients[0][0];
         
+        for(int i = 0; i < length; i++){
+            sum = 0;
+            diagVal = coefficients[i][i];
+            for(int j = 0; j < 3; j++){
+                //any value that is not a diagonal value is going into the sum
+                if(i != j){ 
+                    sum += coefficients[i][j];
+                }
+            }
+            if(diagVal < Math.abs(sum)){
+                return false;
+            }
+
+        }
+        return true;
     }
 }
